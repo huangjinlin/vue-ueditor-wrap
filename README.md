@@ -1,4 +1,7 @@
 # vue-ueditor-wrap
+改进
+
+1.如果存在process.env.NODE_ENV == 'development'加载ueditor.all.js
 
 <p align="center">
   <a href="https://gitter.im/haochuan9421/vue-ueditor-wrap/"><img src="https://badges.gitter.im/haochuan9421/vue-ueditor-wrap.svg" alt="Chatroom"></a>
@@ -32,11 +35,11 @@ yarn add vue-ueditor-wrap
 1. ~~下载 [UEditor](http://ueditor.baidu.com/website/download.html)~~
 
     > 下载[最新编译的 UEditor](https://github.com/HaoChuan9421/vue-ueditor-wrap/tree/master/assets/downloads)。官网目前最新的版本是`1.4.3.3`，存在诸多 BUG，例如 [Issue1](https://github.com/HaoChuan9421/vue-ueditor-wrap/issues/1)，且官方不再积极维护。为了世界的和平，针对一些常见 BUG，我进行了[修复](https://github.com/HaoChuan9421/ueditor/commits/dev-1.4.3.3)，并把编译好的文件放在了本仓库的 `assets/downloads` 目录下，你可以放心[下载](https://github.com/HaoChuan9421/vue-ueditor-wrap/tree/master/assets/downloads)，当然你也可以自己 `clone` [官方源码](https://github.com/fex-team/ueditor)并[编译](http://fex.baidu.com/ueditor/#dev-bale_width_grunt)。
-    
+
     <img src="https://github.com/HaoChuan9421/vue-ueditor-wrap/raw/master/assets/images/downloads.png" width="200">
 
     将下载的压缩包解压并重命名为 `UEditor`（只需要选择一个你需要的版本,比如 `utf8-php`）,放入你项目的 `static` 目录下。
-    
+
     <img src="https://github.com/HaoChuan9421/vue-ueditor-wrap/raw/master/assets/images/file.png" width="200">
 
     > 如果你使用的是 [vue-cli 3.x](https://cli.vuejs.org/zh/guide/)，可以把 `UEditor` 文件夹放入项目的 `public` 目录下。
@@ -130,12 +133,12 @@ yarn add vue-ueditor-wrap
     <vue-ueditor-wrap mode="listener"></vue-ueditor-wrap>
     ```
     可选值：`observer`，`listener`
-    
+
     默认值：`observer`
-    
+
     参数说明：
     1. `observer` 模式借助 [MutationObserver API](https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver)。优点在于监听的准确性，缺点在于它会带来一点额外的性能开销。你可以通过 `observerDebounceTime` 属性设置触发间隔，还可以通过 `observerOptions` 属性有选择的设置 [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserverInit) 的监听行为。该 API 只兼容到 IE11+，但 `vue-ueditor-wrap` 会在不支持的浏览器中自动启用 `listener` 模式。
-    
+
         ```html
         <vue-ueditor-wrap
           mode="observer"
@@ -144,7 +147,7 @@ yarn add vue-ueditor-wrap
           >
         </vue-ueditor-wrap>
         ```
-    
+
     2. `listener` 模式借助 UEditor 的 [contentChange 事件](https://ueditor.baidu.com/doc/#UE.Editor:contentChange)，优点在于依赖官方提供的事件 API，无需额外的性能消耗，兼容性更好，但缺点在于监听的准确性并不高，存在如下方 [常见问题 5] 中的提到的 BUG。
 4. 是否支持 `Vue SSR`？
 
@@ -153,14 +156,14 @@ yarn add vue-ueditor-wrap
 5. 如何进行二次开发（添加自定义按钮、弹窗等）？
 
 	本组件提供了 `beforeInit` 钩子，它会在 `UEditor` 的 scripts 加载完毕之后、编辑器初始化之前触发，你可以在此时机，通过操作 window.UE 对象，来进行诸如添加自定义按钮、弹窗等的二次开发。`beforeInit` 的触发函数以 编辑器 id 和 配置参数 作为入参。下面提供了一个简单的自定义按钮和自定义弹窗的示例，[DEMO](https://github.com/HaoChuan9421/vue-ueditor-wrap-demo) 仓库中也提供了自定义“表格居中”按钮的示例，如果有更多二次开发的需求，你可以参考[官方 API](https://ueditor.baidu.com/doc/) 或者 [UEditor 源码](https://github.com/HaoChuan9421/ueditor/tree/dev-1.4.3.3/_examples) 中的示例。
-  
+
 	<details>
 	  <summary>自定义按钮 Demo</summary>
-	  
+
 	```html
 	<vue-ueditor-wrap v-model="msg" @beforeInit="addCustomButtom"></vue-ueditor-wrap>
 	```
-	  
+
 	```js
 	addCustomButtom (editorId) {
 	  window.UE.registerUI('test-button', function (editor, uiName) {
@@ -170,7 +173,7 @@ yarn add vue-ueditor-wrap
 	        editor.execCommand('inserthtml', `<span>这是一段由自定义按钮添加的文字</span>`)
 	      }
 	    })
-	
+
 	    // 创建一个 button
 	    var btn = new window.UE.ui.Button({
 	      // 按钮的名字
@@ -185,7 +188,7 @@ yarn add vue-ueditor-wrap
 	        editor.execCommand(uiName)
 	      }
 	    })
-	
+
 	    // 当点到编辑内容上时，按钮要做的状态反射
 	    editor.addListener('selectionchange', function () {
 	      var state = editor.queryCommandState(uiName)
@@ -197,7 +200,7 @@ yarn add vue-ueditor-wrap
 	        btn.setChecked(state)
 	      }
 	    })
-	
+
 	    // 因为你是添加 button，所以需要返回这个 button
 	    return btn
 	  }, 0 /* 指定添加到工具栏上的哪个位置，默认时追加到最后 */, editorId /* 指定这个 UI 是哪个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮 */)
@@ -207,11 +210,11 @@ yarn add vue-ueditor-wrap
 
 	<details>
 	  <summary>自定义弹窗 Demo</summary>
-	  
+
 	```html
 	<vue-ueditor-wrap v-model="msg" @beforeInit="addCustomDialog"></vue-ueditor-wrap>
 	```
-	  
+
 	```js
 	addCustomDialog (editorId) {
 	  window.UE.registerUI('test-dialog', function (editor, uiName) {
@@ -245,7 +248,7 @@ yarn add vue-ueditor-wrap
 	        }
 	      ]
 	    })
-	
+
 	    // 参考上面的自定义按钮
 	    var btn = new window.UE.ui.Button({
 	      name: 'dialog-button',
@@ -257,18 +260,18 @@ yarn add vue-ueditor-wrap
 	        dialog.open()
 	      }
 	    })
-	
+
 	    return btn
 	  }, 0 /* 指定添加到工具栏上的那个位置，默认时追加到最后 */, editorId /* 指定这个UI是哪个编辑器实例上的，默认是页面上所有的编辑器都会添加这个按钮 */)
 	}
 	```
-	
+
 	弹出层中的 HTML 页面 `customizeDialogPage.html`
-	
+
 	```html
 	<!DOCTYPE html>
 	<html>
-	
+
 	<head>
 	  <meta charset="UTF-8">
 	  <title>Title</title>
@@ -278,7 +281,7 @@ yarn add vue-ueditor-wrap
 	  <!--internal.js默认是放到 UEditor/dialogs 目录下的-->
 	  <script type="text/javascript" src="./UEditor/dialogs/internal.js"></script>
 	</head>
-	
+
 	<body>
 	  <h1>hello vue-ueditor-wrap</h1>
 	  <script>
@@ -297,10 +300,10 @@ yarn add vue-ueditor-wrap
 	    };
 	  </script>
 	</body>
-	
+
 	</html>
 	```
-	
+
 	</details>
 
 ## Features
@@ -331,13 +334,13 @@ yarn add vue-ueditor-wrap
 3. 我该如何上传图片和文件？为什么我会看到`后台配置项返回格式出错`？
 
 	<img src="https://github.com/HaoChuan9421/vue-ueditor-wrap/raw/master/assets/images/error2.png" height="25"/>
-	
+
 	 上传图片、文件等功能是需要与后台配合的，而你没有给 `config` 属性传递正确的 `serverUrl` ，我提供了`http://35.201.165.105:8000/controller.php` 的临时接口，你可以用于测试，**但切忌在生产环境使用！！！** 关于如何搭建上传接口，可以参考[官方文档](http://fex.baidu.com/ueditor/#server-deploy)。
 
 4. 单图片跨域上传失败！
 
 	`UEditor` 的单图上传是通过 Form 表单 + iframe 的方式实现的，但由于同源策略的限制，父页面无法访问跨域 iframe 的文档内容，所以会出现单图片跨域上传失败的问题。我通过 XHR 重构了单图上传的方式，[下载最新编译的 UEditor](https://github.com/HaoChuan9421/vue-ueditor-wrap/tree/master/assets/downloads) 资源文件即可在 `IE10+` 的浏览器中实现单图跨域上传了。具体细节，[点此查看](https://github.com/HaoChuan9421/ueditor/commit/31f9207142d21a406041da0bd97968b466530c76)。当然你也可以通过配置 `toolbars` 参数来隐藏单图片上传按钮，并结合上面介绍的“自定义按钮”，曲线救国，以下代码仅供参考。
-  
+
 	```js
 	var input = document.createElement('input')
 	input.type = "file"

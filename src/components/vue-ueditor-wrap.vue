@@ -186,13 +186,17 @@ export default {
         }
         let coreScript = document.createElement('script');
         coreScript.type = 'text/javascript';
-        coreScript.src = this.mixedConfig.UEDITOR_HOME_URL + 'ueditor.all.min.js';
+        let fileName = 'ueditor.all.min.js'
+        if (process && process.env && process.env.NODE_ENV == 'development') {
+          fileName = 'ueditor.all.js'
+        }
+        coreScript.src = this.mixedConfig.UEDITOR_HOME_URL + fileName;
         document.getElementsByTagName('head')[0].appendChild(coreScript);
         coreScript.onload = function () {
           if (window.UE && window.UE.getEditor) {
             resolve();
           } else {
-            console.error('加载ueditor.all.min.js失败,请检查您的配置地址UEDITOR_HOME_URL填写是否正确!\n', coreScript.src);
+            console.error('加载'+ fileName +'失败,请检查您的配置地址UEDITOR_HOME_URL填写是否正确!\n', coreScript.src);
           }
         };
       });
